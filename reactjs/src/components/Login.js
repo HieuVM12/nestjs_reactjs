@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import requestApi from '../helpers/api'
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import * as actions from '../redux/actions/index'
 
 const Login = () => {
+    const dispatch = useDispatch()
     const [loginData, setLoginData] = useState({});
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -17,12 +21,22 @@ const Login = () => {
     const onSubmit = () => {
         let valid = validateForm();
         if (valid) {
+            dispatch(actions.controlLoading(true));
             requestApi('/auth/login', 'POST', loginData).then((res) => {
                 localStorage.setItem('access_token', res.data.access_token);
                 localStorage.setItem('refresh_token', res.data.refresh_token);
+                dispatch(actions.controlLoading(false));
                 navigate('/');
             }).catch(err => {
-                console.log(err)
+                // console.log(err)
+                dispatch(actions.controlLoading(false));
+                if (typeof err.response !== "undefined") {
+                    if (err.response.status !== 201) {
+                        toast.error(err.response.data.message, { position: 'top-right' })
+                    } else {
+                        toast.error('loi', { position: 'top-right' })
+                    }
+                }
             })
         }
         setIsSubmitted(true);

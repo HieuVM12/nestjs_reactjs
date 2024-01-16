@@ -10,7 +10,7 @@ import { Product } from './entities/product.entity';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UpdateResult } from 'typeorm';
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @UsePipes(ValidationPipe)
 @Controller('product')
 export class ProductController {
