@@ -5,19 +5,56 @@ import { useDispatch } from 'react-redux'
 import * as actions from '../../redux/actions/index'
 
 const ProductList = () => {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const [numOfPage, setNumOfPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
   const dispatch = useDispatch();
+  const columns = [
+    {
+      name: "ID",
+      element: row => row.id
+    },
+    {
+      name: "ten san pham",
+      element: row => row.name
+    },
+    {
+      name: "mo ta",
+      element: row => row.description
+    },
+    {
+      name: "danh muc",
+      element: row => row.category.name
+    },
+    {
+      name: "ngay tao",
+      element: row => row.created_at
+    },
+    {
+      name: "ngay cap nhat",
+      element: row => row.updated_at
+    }, {
+      name: "Hanh dong",
+      element: row => (
+        <>
+          <button type='button' className='btn btn-sm btn-warning me-1'>Sua</button>
+          <button type='button' className='btn btn-danger btn-sm me-1'>Xoa</button>
+        </>
+      )
+    }
+  ]
   useEffect(() => {
     dispatch(actions.controlLoading(true));
-    requestApi('/product', 'GET', []).then(response => {
-      console.log(response);
+    let query = `?items_per_page=${itemsPerPage}&page=${currentPage}`;
+    requestApi(`/product${query}`, 'GET', []).then(response => {
       setProducts(response.data.data);
+      setNumOfPage(response.data.lastPage);
       dispatch(actions.controlLoading(false));
     }).catch(err => {
-      console.log(err);
       dispatch(actions.controlLoading(false));
     })
-  }, [])
+  }, [itemsPerPage, currentPage])
   return (
     <div id="layoutSidenav_content">
       <main>
@@ -30,7 +67,15 @@ const ProductList = () => {
           <div className='mb-3'>
             <button type='button' className='btn btn-sm btn-success me-2'><i className="fa fa-plus"></i> Add new</button>
           </div>
-          <DataTable />
+          <DataTable
+            name="Sản phẩm"
+            data={products}
+            columns={columns}
+            numOfPage={numOfPage}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            onChangeItemsPerPage={setItemsPerPage}
+          />
         </div>
 
       </main>

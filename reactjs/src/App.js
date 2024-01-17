@@ -9,6 +9,7 @@ import PublicRoutes from './layouts/PublicRoutes';
 import Layout from './layouts/Layout';
 import 'react-toastify/dist/ReactToastify.css'
 import ProductList from './components/product/ProductList';
+import CreateProduct from './components/product/CreateProduct';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
 
           </Route>
           <Route path='/products' element={<ProductList />} />
+          <Route path='/product-create' element={<CreateProduct />} />
         </Route>
         <Route element={<PublicRoutes />}>
           <Route path='/login' element={<Login />} />
