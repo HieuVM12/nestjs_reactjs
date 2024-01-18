@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import requestApi from '../../helpers/api'
 import { toast } from 'react-toastify'
 
-const CreateProduct = () => {
+const UpdateProduct = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const [image, setImage] = useState('');
     const [categories, setCategories] = useState([]);
+    const idProduct = useParams();
     const handleSubmitFormAdd = async (data) => {
         let formData = new FormData();
         for (let key in data) {
@@ -29,11 +30,17 @@ const CreateProduct = () => {
     }
 
     useEffect(() => {
-        requestApi('/category', 'GET').then(res => {
-            setCategories(res.data.data);
-        }).catch(err => {
-            console.log(err);
-        });
+        try {
+            const renderData = async () => {
+                const res = await requestApi('/category', 'GET');
+                setCategories(res.data.data);
+                const detailProduct = await requestApi(`/product/${idProduct.id}`, 'GET');
+                console.log(detailProduct);
+                const fields = ['name', 'description', 'image', 'category'];
+            }
+        } catch (error) {
+
+        }
     }, [])
 
     const onImageChange = (event) => {
@@ -49,16 +56,16 @@ const CreateProduct = () => {
         <div id="layoutSidenav_content">
             <main>
                 <div className="container-fluid px-4">
-                    <h1 className="mt-4">Create Product</h1>
+                    <h1 className="mt-4">Cap nhat san pharm</h1>
                     <ol className="breadcrumb mb-4">
                         <li className="breadcrumb-item"><Link to='/'>Dashboard</Link></li>
                         <li className="breadcrumb-item"><Link to='/products'>Sản phẩm</Link></li>
-                        <li className='breadcrumb-item active'>Thêm sản phẩm</li>
+                        <li className='breadcrumb-item active'>Cap nhat sản phẩm</li>
                     </ol>
                     <div className='card mb-4'>
                         <div className='card-header'>
                             <i className='fas fa-plus me-1'></i>
-                            Theem
+                            cap nhat
                         </div>
                         <div className='card-body'>
                             <div className='row mb-3'>
@@ -105,4 +112,4 @@ const CreateProduct = () => {
     )
 }
 
-export default CreateProduct
+export default UpdateProduct

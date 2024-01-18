@@ -77,6 +77,6 @@ export class UserController {
         if (!file) {
             throw new BadRequestException('Nhap anh');
         }
-        return this.userService.updateAvatar(req.user_data.id, file.destination + '/' + file.filename);
+        return this.userService.updateAvatar(req.user_data.id, file.fieldname + '/' + file.filename);
     }
 }

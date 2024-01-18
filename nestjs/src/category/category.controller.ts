@@ -6,7 +6,7 @@ import { Category } from './entities/category.entity';
 import { FilterProductDto } from 'src/product/dto/filterProductDto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @UsePipes(ValidationPipe)
 @Controller('category')
 export class CategoryController {

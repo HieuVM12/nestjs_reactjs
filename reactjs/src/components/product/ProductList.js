@@ -3,6 +3,7 @@ import DataTable from '../common/DataTable'
 import requestApi from '../../helpers/api'
 import { useDispatch } from 'react-redux'
 import * as actions from '../../redux/actions/index'
+import { Link } from 'react-router-dom'
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -24,6 +25,10 @@ const ProductList = () => {
       element: row => row.description
     },
     {
+      name: 'hinhf anh',
+      element: row => <img width="100px" src={"http://localhost:5000/" + row.image} />
+    },
+    {
       name: "danh muc",
       element: row => row.category.name
     },
@@ -38,7 +43,7 @@ const ProductList = () => {
       name: "Hanh dong",
       element: row => (
         <>
-          <button type='button' className='btn btn-sm btn-warning me-1'>Sua</button>
+          <Link to={`/product/edit/${row.id}`} className='btn btn-warning btn-sm me-1'>Sua</Link>
           <button type='button' className='btn btn-danger btn-sm me-1'>Xoa</button>
         </>
       )
@@ -61,11 +66,11 @@ const ProductList = () => {
         <div className="container-fluid px-4">
           <h1 className="mt-4">Tables</h1>
           <ol className="breadcrumb mb-4">
-            <li className="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li className="breadcrumb-item"><Link to='/'>Dashboard</Link></li>
             <li className="breadcrumb-item active">Tables</li>
           </ol>
           <div className='mb-3'>
-            <button type='button' className='btn btn-sm btn-success me-2'><i className="fa fa-plus"></i> Add new</button>
+            <Link to='/product/create' className='btn btn-sm btn-success me-2'><i className="fa fa-plus"></i>Add new</Link>
           </div>
           <DataTable
             name="Sản phẩm"
