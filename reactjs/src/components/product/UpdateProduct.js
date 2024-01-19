@@ -5,23 +5,26 @@ import requestApi from '../../helpers/api'
 import { toast } from 'react-toastify'
 
 const UpdateProduct = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, setValue, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const [image, setImage] = useState('');
+    const [assetImage, setAssetImage] = useState('');
     const [categories, setCategories] = useState([]);
     const idProduct = useParams();
     const handleSubmitFormAdd = async (data) => {
         let formData = new FormData();
         for (let key in data) {
             if (key == 'image') {
-                formData.append(key, data[key][0])
+                if (data.image[0] instanceof File) {
+                    formData.append(key, data[key][0])
+                }
             } else {
                 formData.append(key, data[key]);
             }
         }
         try {
-            const res = await requestApi('/product/create', 'POST', formData, 'json', 'multipart/form-data');
-            toast.success('them san pham thanh cong', { position: 'top-right', autoClose: 2000 });
+            const res = await requestApi('/product/' + idProduct.id, 'PUT', formData, 'json', 'multipart/form-data');
+            toast.success('cap nhat san pham thanh cong', { position: 'top-right', autoClose: 2000 });
             navigate('/products');
         } catch (error) {
             toast.error('loi roi', { position: 'top-right', autoClose: 2000 });
@@ -37,9 +40,18 @@ const UpdateProduct = () => {
                 const detailProduct = await requestApi(`/product/${idProduct.id}`, 'GET');
                 console.log(detailProduct);
                 const fields = ['name', 'description', 'image', 'category'];
+                fields.forEach(field => {
+                    if (field == 'category') {
+                        setValue(field, detailProduct.data[field].id)
+                    } else {
+                        setValue(field, detailProduct.data[field])
+                    }
+                })
+                setAssetImage("http://localhost:5000/" + detailProduct.data.image);
             }
+            renderData();
         } catch (error) {
-
+            console.log(error);
         }
     }, [])
 
@@ -50,6 +62,7 @@ const UpdateProduct = () => {
                 setImage(reader.result)
             };
             reader.readAsDataURL(event.target.files[0]);
+            setAssetImage('');
         }
     }
     return (
@@ -85,8 +98,9 @@ const UpdateProduct = () => {
                                         <div className='mb-3 mt-3'>
                                             <label className='form-label'>Anh san pham</label>
                                             <br />
+                                            {assetImage && <img src={assetImage} className='mb-2' alt='.' style={{ width: '300px' }} />}
                                             {image && <img src={image} className='mb-2' alt='.' style={{ width: '300px' }} />}
-                                            <input {...register('image', { required: 'them anh san pham', onChange: onImageChange })} type='file' className='form-control' accept='image/*' />
+                                            <input {...register('image', { onChange: onImageChange })} type='file' className='form-control' accept='image/*' />
                                             {errors.image && <p style={{ color: 'red' }}>{errors.image.message}</p>}
 
                                         </div>
@@ -100,7 +114,7 @@ const UpdateProduct = () => {
                                             </select>
                                             {errors.category && <p style={{ color: 'red' }}>{errors.category.message}</p>}
                                         </div>
-                                        <button type='button' onClick={handleSubmit(handleSubmitFormAdd)} className='btn btn-success'>Them san pham</button>
+                                        <button type='button' onClick={handleSubmit(handleSubmitFormAdd)} className='btn btn-success'>Cap nhat san pham</button>
                                     </div>
                                 </form>
                             </div>

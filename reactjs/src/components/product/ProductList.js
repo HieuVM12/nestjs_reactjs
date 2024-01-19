@@ -4,12 +4,17 @@ import requestApi from '../../helpers/api'
 import { useDispatch } from 'react-redux'
 import * as actions from '../../redux/actions/index'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { Button, Modal } from 'react-bootstrap'
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [numOfPage, setNumOfPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [showModal, setShowModal] = useState(false);
+  const [refresh, setRefresh] = useState(Date.now());
+  const [deleteItem, setDeleteItem] = useState(null)
   const dispatch = useDispatch();
   const columns = [
     {
@@ -44,11 +49,27 @@ const ProductList = () => {
       element: row => (
         <>
           <Link to={`/product/edit/${row.id}`} className='btn btn-warning btn-sm me-1'>Sua</Link>
-          <button type='button' className='btn btn-danger btn-sm me-1'>Xoa</button>
+          <button type='button' className='btn btn-danger btn-sm me-1' onClick={() => deleteProduct(row.id)}>Xoa</button>
         </>
       )
     }
   ]
+
+  const deleteProduct = (id) => {
+    setShowModal(true)
+    setDeleteItem(id)
+  }
+  const requestDeleteApi = () => {
+    requestApi(`/product/${deleteItem}`, 'DELETE', []).then(response => {
+      setShowModal(false)
+      toast.success('xoa thanh cong', { position: 'top-right' })
+      setRefresh(Date.now())
+    }).catch(err => {
+      console.log(err)
+      toast.error('loi roi', { position: 'top-right' })
+      setShowModal(false)
+    })
+  }
   useEffect(() => {
     dispatch(actions.controlLoading(true));
     let query = `?items_per_page=${itemsPerPage}&page=${currentPage}`;
@@ -59,7 +80,7 @@ const ProductList = () => {
     }).catch(err => {
       dispatch(actions.controlLoading(false));
     })
-  }, [itemsPerPage, currentPage])
+  }, [itemsPerPage, currentPage, refresh])
   return (
     <div id="layoutSidenav_content">
       <main>
@@ -84,6 +105,18 @@ const ProductList = () => {
         </div>
 
       </main>
+      <Modal show={showModal} onHide={() => setShowModal(false)} size='sm'>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure want to delete?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setShowModal(false)}>Close</Button>
+          <Button className='btn-danger' onClick={requestDeleteApi}>Delete</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   )
 }
