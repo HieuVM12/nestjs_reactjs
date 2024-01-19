@@ -14,7 +14,8 @@ const ProductList = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(Date.now());
-  const [deleteItem, setDeleteItem] = useState(null)
+  const [deleteItem, setDeleteItem] = useState(null);
+  const [search, setSearch] = useState('');
   const dispatch = useDispatch();
   const columns = [
     {
@@ -65,7 +66,6 @@ const ProductList = () => {
       toast.success('xoa thanh cong', { position: 'top-right' })
       setRefresh(Date.now())
     }).catch(err => {
-      console.log(err)
       toast.error('loi roi', { position: 'top-right' })
       setShowModal(false)
     })
@@ -73,6 +73,9 @@ const ProductList = () => {
   useEffect(() => {
     dispatch(actions.controlLoading(true));
     let query = `?items_per_page=${itemsPerPage}&page=${currentPage}`;
+    if (search) {
+      query += `&search=${search}`;
+    }
     requestApi(`/product${query}`, 'GET', []).then(response => {
       setProducts(response.data.data);
       setNumOfPage(response.data.lastPage);
@@ -80,7 +83,7 @@ const ProductList = () => {
     }).catch(err => {
       dispatch(actions.controlLoading(false));
     })
-  }, [itemsPerPage, currentPage, refresh])
+  }, [itemsPerPage, currentPage, search, refresh])
   return (
     <div id="layoutSidenav_content">
       <main>
@@ -101,9 +104,9 @@ const ProductList = () => {
             currentPage={currentPage}
             onPageChange={setCurrentPage}
             onChangeItemsPerPage={setItemsPerPage}
+            onChangeSearch={setSearch}
           />
         </div>
-
       </main>
       <Modal show={showModal} onHide={() => setShowModal(false)} size='sm'>
         <Modal.Header closeButton>

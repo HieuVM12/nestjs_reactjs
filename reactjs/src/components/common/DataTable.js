@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const DataTable = (props) => {
-    const { name, data, columns, currentPage, numOfPage, onPageChange, onChangeItemsPerPage } = props;
-
+    const { name, data, columns, currentPage, numOfPage, onPageChange, onChangeItemsPerPage, onChangeSearch } = props;
+    const [searchTerm, setSearchTerm] = useState('');
     const renderHeaders = () => {
         return columns.map((col, index) => <th key={index}>{col.name}</th>)
     }
@@ -45,6 +45,12 @@ const DataTable = (props) => {
         const target = event.target;
         onChangeItemsPerPage(target.value);
     }
+    const handleInputChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+    const handleSearchClick = () => {
+        onChangeSearch(searchTerm);
+    };
     return (
         <div className="card mb-4">
             <div className="card-header">
@@ -60,11 +66,17 @@ const DataTable = (props) => {
                                 <option value="50">50</option>
                                 <option value="1">1</option>
                                 <option value="5">5</option>
-                            </select> entries
+                            </select>
                         </label>
                     </div>
                     <div className="col-sm-12 col-md-6">
                         <label className='d-inline-flex float-end'>Search:
+                            <input type="search" className="form-control form-control-sm ms-1" placeholder="Email or Name"
+                                value={searchTerm}
+                                onChange={handleInputChange} />
+                            <button className="btn btn-primary" id="btnNavbarSearch" type="button"
+                                onClick={handleSearchClick}
+                            ><i className="fas fa-search"></i></button>
                         </label>
                     </div>
                 </div>

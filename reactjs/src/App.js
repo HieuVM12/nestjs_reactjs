@@ -12,6 +12,7 @@ import ProductList from './components/product/ProductList';
 import CreateProduct from './components/product/CreateProduct';
 import './css/style.css';
 import UpdateProduct from './components/product/UpdateProduct';
+import NotFound404 from './components/NotFound404';
 function App() {
   return (
     <Routes>
@@ -29,6 +30,8 @@ function App() {
           <Route path='/register' element={<Register />} />
         </Route>
       </Route>
+      <Route path='*' element={<NotFound404 />} />
+      <Route path='/notFound' element={<NotFound404 />} />
     </Routes>
   );
 }

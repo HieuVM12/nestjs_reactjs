@@ -23,8 +23,14 @@ const CreateProduct = () => {
             toast.success('them san pham thanh cong', { position: 'top-right', autoClose: 2000 });
             navigate('/products');
         } catch (error) {
-            toast.error('loi roi', { position: 'top-right', autoClose: 2000 });
             console.log(error);
+            if (typeof error.response !== "undefined") {
+                if (error.response.status !== 201) {
+                    toast.error(error.response.data.message, { position: 'top-right' })
+                } else {
+                    toast.error('loi', { position: 'top-right' })
+                }
+            }
         }
     }
 
@@ -32,7 +38,6 @@ const CreateProduct = () => {
         requestApi('/category', 'GET').then(res => {
             setCategories(res.data.data);
         }).catch(err => {
-            console.log(err);
         });
     }, [])
 

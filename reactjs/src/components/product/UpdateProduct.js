@@ -11,7 +11,7 @@ const UpdateProduct = () => {
     const [assetImage, setAssetImage] = useState('');
     const [categories, setCategories] = useState([]);
     const idProduct = useParams();
-    const handleSubmitFormAdd = async (data) => {
+    const handleSubmitFormUpdate = async (data) => {
         let formData = new FormData();
         for (let key in data) {
             if (key == 'image') {
@@ -28,7 +28,6 @@ const UpdateProduct = () => {
             navigate('/products');
         } catch (error) {
             toast.error('loi roi', { position: 'top-right', autoClose: 2000 });
-            console.log(error);
         }
     }
 
@@ -38,7 +37,6 @@ const UpdateProduct = () => {
                 const res = await requestApi('/category', 'GET');
                 setCategories(res.data.data);
                 const detailProduct = await requestApi(`/product/${idProduct.id}`, 'GET');
-                console.log(detailProduct);
                 const fields = ['name', 'description', 'image', 'category'];
                 fields.forEach(field => {
                     if (field == 'category') {
@@ -51,9 +49,11 @@ const UpdateProduct = () => {
             }
             renderData();
         } catch (error) {
-            console.log(error);
+            navigate('/notFound');
+            toast.error('co loi xay ra', { position: 'top-right' })
         }
     }, [])
+
 
     const onImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
@@ -114,7 +114,7 @@ const UpdateProduct = () => {
                                             </select>
                                             {errors.category && <p style={{ color: 'red' }}>{errors.category.message}</p>}
                                         </div>
-                                        <button type='button' onClick={handleSubmit(handleSubmitFormAdd)} className='btn btn-success'>Cap nhat san pham</button>
+                                        <button type='button' onClick={handleSubmit(handleSubmitFormUpdate)} className='btn btn-success'>Cap nhat san pham</button>
                                     </div>
                                 </form>
                             </div>

@@ -89,6 +89,17 @@ export class ProductService {
     }
 
     async updateProduct(id: number, updateProductDto: UpdateProductDto): Promise<UpdateResult> {
+        const product = await this.productRepository.findOneBy({ id });
+        if (!product) {
+            throw new NotFoundException('Khong tồn tại sản phẩm');
+        }
+        if (updateProductDto.image) {
+            const imagePath = product.image;
+            if (fs.existsSync(imagePath)) {
+                // Xóa đường dẫn ảnh
+                fs.unlinkSync(imagePath);
+            }
+        }
         return await this.productRepository.update(id, updateProductDto);
     }
 

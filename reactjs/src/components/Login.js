@@ -28,7 +28,6 @@ const Login = () => {
                 dispatch(actions.controlLoading(false));
                 navigate('/');
             }).catch(err => {
-                // console.log(err)
                 dispatch(actions.controlLoading(false));
                 if (typeof err.response !== "undefined") {
                     if (err.response.status !== 201) {
