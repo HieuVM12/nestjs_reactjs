@@ -107,14 +107,14 @@ const ProductList = () => {
       </main>
       <Modal show={showModal} onHide={() => setShowModal(false)} size='sm'>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
+          <Modal.Title>Xac nhan</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure want to delete?
+          banj co chac muon xoa san pham nay?
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setShowModal(false)}>Close</Button>
-          <Button className='btn-danger' onClick={requestDeleteApi}>Delete</Button>
+          <Button onClick={() => setShowModal(false)}>Dong</Button>
+          <Button className='btn-danger' onClick={requestDeleteApi}>Xoa</Button>
         </Modal.Footer>
       </Modal>
     </div>

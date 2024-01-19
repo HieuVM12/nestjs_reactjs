@@ -16,7 +16,7 @@ import { extname } from 'path';
 export class UserController {
     constructor(private userService: UserService) { }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     // @ApiQuery({ name: 'page' })
     // @ApiQuery({ name: 'items_per_page' })
     // @ApiQuery({ name: 'search' })
@@ -25,32 +25,32 @@ export class UserController {
         return this.userService.findAll(query);
     }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Get(':id')
     findOne(@Param('id') id: string): Promise<User> {
         return this.userService.findOne(Number(id));
     }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Post('create')
     create(@Body() createUserDto: CreateUserDto): Promise<User> {
         return this.userService.create(createUserDto);
     }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Put(':id')
     update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
         return this.userService.update(Number(id), updateUserDto);
     }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Delete(':id')
     delete(@Param('id') id: string) {
         return this.userService.delete(Number(id));
     }
 
     @Post('upload-avatar')
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @UseInterceptors(FileInterceptor('avatar', {
         storage: storageConfig('avatar'),
         fileFilter: (req, file, cb) => {

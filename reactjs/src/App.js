@@ -17,10 +17,8 @@ function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route element={<Main />}>
-          <Route element={<PrivateRoutes />}>
-
-
-          </Route>
+          // <Route element={<PrivateRoutes />}>
+          // </Route>
           <Route path='/' element={<Dashboard />} />
           <Route path='/products' element={<ProductList />} />
           <Route path='/product/create' element={<CreateProduct />} />
